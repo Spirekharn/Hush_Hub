@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Community Locked - Hush Hub{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto text-center mt-5">
+        <div class="card">
+            <div class="card-body py-5">
+                <div class="display-1 mb-3">🔒</div>
+                <h2>Community Locked</h2>
+                <p class="lead">You need <strong>100 points</strong> to unlock the Community Hub.</p>
+                <p>Current Points: <strong>{{ user.points }}</strong></p>
+                <hr>
+                <p class="text-muted">Earn points by:</p>
+                <ul class="list-unstyled">
+                    <li>Creating posts (+10)</li>
+                    <li>Sending messages (+5)</li>
+                    <li>Connecting with others (+50)</li>
+                </ul>
+                <a href="{% url 'index' %}" class="btn btn-primary mt-3">Back to Feed</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

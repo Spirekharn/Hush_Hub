@@ -1,0 +1,62 @@
+{% extends 'main/base.html' %}
+
+{% block title %}{{ profile_user.username }} - Hush Hub{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2>{{ profile_user.username }}</h2>
+                <p class="text-muted">
+                    <span class="badge bg-secondary">{{ profile_user.get_role_display }}</span>
+                    <span class="badge bg-info text-dark">Points: {{ profile_user.points }}</span>
+                    <span class="badge bg-warning text-dark">Badge: {{ profile_user.current_badge }}</span>
+                </p>
+
+                {% if user != profile_user %}
+                {% if connection_status %}
+                {% if "Accepted" in connection_status or "accepted" in connection_status %}
+                <p class="text-success mb-2">Connected</p>
+                <a href="{% url 'chat_room' profile_user.id %}" class="btn btn-primary">Chat</a>
+                {% else %}
+                <p class="text-info">{{ connection_status }}</p>
+                {% endif %}
+                {% else %}
+                <a href="{% url 'send_connection_request' profile_user.username %}" class="btn btn-primary">
+                    Send Connection Request
+                </a>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <h3>Posts</h3>
+        {% if posts %}
+        {% for post in posts %}
+        <div class="card post-card">
+            <div class="card-body">
+                <div class="post-meta">
+                    {% if post.is_anonymous %}
+                    <span class="anonymous-badge">Anonymous</span>
+                    {% else %}
+                    <strong>{{ post.author.username }}</strong>
+                    {% endif %}
+                    <span class="text-muted ms-3">{{ post.created_at|timesince }} ago</span>
+                </div>
+                <div class="post-content">
+                    {{ post.content }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <p class="text-muted">No posts yet</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Self-Care - Hush Hub{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="mb-4">Self-Care Sanctuary</h1>
+
+        <!-- Mood Tracker -->
+        <div class="card mb-5">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0 h5">Mood Tracker</h3>
+            </div>
+            <div class="card-body">
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">How are you feeling?</label>
+                            {{ form.mood }}
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Notes (Optional)</label>
+                            {{ form.note }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Track Mood</button>
+                </form>
+
+                <h5 class="mt-4">Your Mood History</h5>
+                <div class="list-group">
+                    {% for entry in mood_history %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-info text-dark me-2">{{ entry.get_mood_display }}</span>
+                            <span class="text-muted small">{{ entry.created_at|date:"M d, Y H:i" }}</span>
+                            {% if entry.note %}
+                            <p class="mb-0 mt-1 small text-muted">{{ entry.note }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No mood entries yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathing Exercise -->
+        <div class="card mb-5">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0 h5">Breathing Space</h3>
+            </div>
+            <div class="card-body text-center py-5">
+                <div id="breathing-circle" class="mx-auto mb-4"></div>
+                <h4 id="breathing-text">Breathe In...</h4>
+                <p class="text-muted">Follow the circle to relax.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #breathing-circle {
+        width: 150px;
+        height: 150px;
+        background-color: #a8d5ba;
+        border-radius: 50%;
+        transition: transform 4s ease-in-out;
+    }
+
+    .expand {
+        transform: scale(1.5);
+    }
+</style>
+
+<script>
+    const circle = document.getElementById('breathing-circle');
+    const text = document.getElementById('breathing-text');
+
+    function breathe() {
+        text.innerText = "Breathe In...";
+        circle.classList.add('expand');
+
+        setTimeout(() => {
+            text.innerText = "Hold...";
+
+            setTimeout(() => {
+                text.innerText = "Breathe Out...";
+                circle.classList.remove('expand');
+
+                setTimeout(() => {
+                    text.innerText = "Hold...";
+                }, 4000);
+
+            }, 4000);
+
+        }, 4000);
+    }
+
+    setInterval(breathe, 16000); // 4s in, 4s hold, 4s out, 4s hold
+    breathe();
+</script>
+{% endblock %}
